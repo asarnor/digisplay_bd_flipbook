@@ -1,0 +1,296 @@
+<!doctype html>
+<!--[if lt IE 7 ]> <html lang="en" class="ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+
+<head>
+    <meta name="viewport" content="width = 1050, user-scalable = no" />
+    <script type="text/javascript" src="extras/jquery.min.1.7.js"></script>
+    <script type="text/javascript" src="extras/modernizr.2.5.3.min.js"></script>
+    <script type="text/javascript" src="js/media-player.js"></script>
+</head>
+
+<body style="background-image: url(pics/back.jpg); background-position: center; background-position: top; background-size: 100%;">
+<div id="buttons-container" style="display:none;" >
+    <div id="buttons-left">
+        <div class="cta" >
+            <img src="css/Video_Play_Button.png" width="75" height="75" alt="video">
+        </div>
+        <div class="cta" >
+            <img src="css/More_Info.png" width="75" height="75" alt="video">
+        </div>
+    </div>
+    <div id="buttons-right">
+        <div class="cta" >
+            <img src="css/Video_Play_Button.png" width="75" height="75" alt="video">
+        </div>
+        <div class="cta" >
+            <img src="css/More_Info.png" width="75" height="75" alt="video">
+        </div>
+    </div>
+    
+</div>
+
+    <div class="flipbook-viewport">
+        <div class="container">
+            <div class="flipbook" style="display:none;">
+                <div style="background-image:url(pages/1.jpg)"></div>
+                <div style="background-image:url(pages/2.jpg)"></div>
+                <div style="background-image:url(pages/3.jpg)"></div>
+                <div style="background-image:url(pages/4.jpg)"></div>
+                <div style="background-image:url(pages/5.jpg)"></div>
+                <div style="background-image:url(pages/6.jpg)"></div>
+                <div style="background-image:url(pages/7.jpg)"></div>
+                <div style="background-image:url(pages/8.jpg)"></div>
+                <div style="background-image:url(pages/9.jpg)"></div>
+                <div style="background-image:url(pages/10.jpg)"></div>
+                <div style="background-image:url(pages/11.jpg)"></div>
+                <div style="background-image:url(pages/12.jpg)"></div>
+                <div style="background-image:url(pages/13.jpg)"></div>
+                <div style="background-image:url(pages/14.jpg)"></div>
+                <div style="background-image:url(pages/15.jpg)"></div>
+                <div style="background-image:url(pages/16.jpg)"></div>
+                <div style="background-image:url(pages/17.jpg)"></div>
+                <div style="background-image:url(pages/18.jpg)"></div>
+                <div style="background-image:url(pages/19.jpg)"></div>
+                <div style="background-image:url(pages/20.jpg)"></div>
+                <div style="background-image:url(pages/21.jpg)"></div>
+                <div style="background-image:url(pages/22.jpg)"></div>
+                <div style="background-image:url(pages/23.jpg)"></div>
+                <div style="background-image:url(pages/24.jpg)"></div>
+                <div style="background-image:url(pages/25.jpg)"></div>
+                <div style="background-image:url(pages/26.jpg)"></div>
+                <div style="background-image:url(pages/27.jpg)"></div>
+                <div style="background-image:url(pages/28.jpg)"></div>
+                <div style="background-image:url(pages/29.jpg)"></div>
+                <div style="background-image:url(pages/30.jpg)"></div>
+                <div style="background-image:url(pages/31.jpg)"></div>
+                <div style="background-image:url(pages/32.jpg)"></div>
+                <div style="background-image:url(pages/33.jpg)"></div>
+                <div style="background-image:url(pages/34.jpg)"></div>
+                <div style="background-image:url(pages/35.jpg)"></div>
+                <div style="background-image:url(pages/36.jpg)"></div>
+            </div>
+        </div>
+    </div>
+    <div class="loading style-2 hideMe">
+        <div id='media-player' class="hideMe">
+            <video id='media-video' width="640" height="480" controls>
+                <source src='videos/kh.mp4' type='video/mp4'>
+            </video>
+            <div class="btn-video-close cta" data-activity="video-close" data-info=""><span></span></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+    function loadApp() {
+
+        var moxieNotificationEvent;
+
+        function defineGeckoToMoxieNotificationEvent() {
+            moxieNotificationEvent = document.createEvent('MessageEvent');
+        }
+
+        defineGeckoToMoxieNotificationEvent();
+
+        function fireEventForMoxie(data) {
+            moxieNotificationEvent.initMessageEvent('callMoxie', false, false, data, null, null, null, null);
+            document.dispatchEvent(moxieNotificationEvent);
+        }
+
+        function moxieHostSetVariable(varName, val) {
+            try {
+                var jsObj = {
+                    methodName:"Omnivex.Data.MoxieDataConnection.SetValue",
+                    name: varName,
+                    value: val
+                };
+                var jsonData = JSON.stringify(jsObj);
+                    
+                    if( typeof InstallTrigger !== 'undefined'){
+                        fireEventForMoxie(jsonData)
+                    } else {
+                        var moxie = window.external;
+                        moxie.notifyStringPayload(jsonData);
+                    }
+                                        
+            } catch (e) {
+                console.error("moxieHostSetVariable: ", e);
+            }
+        }
+
+        function activityHandler(activity, data) {
+            switch(activity) {
+                case "video-play":
+                    playVideo(data);
+                    break;
+                case "video-close":
+                    removeVideo()
+                    break;
+                default:
+                    moxieHostSetVariable(activity, data);
+            }
+        }
+
+        // Create the flipbook
+
+        $('.flipbook').turn({
+            // Width
+
+            width: 1300,
+
+            // Height
+
+            height: 900,
+
+            // Elevation
+
+            elevation: 500,
+
+            // Enable gradients
+
+            gradients: true,
+
+            // Auto center this flipbook
+
+            autoCenter: true,
+
+
+            zoom: 0,
+
+        });
+
+        function myData() {
+            // populate data here//
+            var pageMetaData = {
+                '3':[ {
+                    activity: 'video-play',
+                    info: 'videos/60minutes-1.mp4',
+                    img: 'css/Video_Play_Button.png'
+                 } ],
+                 '4':[ {
+                    activity: 'video-play',
+                    info: 'videos/Boatride3-6.mp4',
+                    img: 'css/Video_Play_Button.png'
+                 } ],
+                 '5':[ {
+                    activity: 'video-play',
+                    info: 'videos/SunOil.mp4',
+                    img: 'css/Video_Play_Button.png'
+                 },
+                 {
+                    activity: 'send-url',
+                    info: 'http://www.bd.com/en-us/offerings/capabilities/syringes-and-needles/safety-syringes-and-needles/safety-syringes/bd-integra-retracting-syringe',
+                    img: 'css/More_Info.png',
+                    activity_alt: 'SMS_Trigger',
+                    info_alt: 'SMS Launcher',
+                 } ],
+				 '13':[ {
+                    activity: 'video-play',
+                    info: 'videos/BDClock3.mp4',
+                    img: 'css/Video_Play_Button.png'
+                 },
+                 {
+                    activity: 'send-url',
+                    info: 'https://www.bd.com/showcase/becton_clock.aspx',
+                    img: 'css/More_Info.png',
+                    activity_alt: 'SMS_Trigger',
+                    info_alt: 'SMS Launcher',
+                 } ]
+            }
+
+            return pageMetaData
+        }
+
+        $(".flipbook").bind("turned", function(event, page, view) {
+            hideAllButtons();
+            moxieHostSetVariable("currentPage", page);
+            view.forEach(function (curPage) {
+                var spage= curPage.toString();
+                if (myData()[spage] && myData()[spage].length ) {
+                    var side = (curPage%2) === 0 ? '#buttons-left' : '#buttons-right'
+                    $( side+' .cta' ).each(function( index ) {
+                        if (myData()[spage][index]) {
+                            var args = [this];
+                            Object.keys(myData()[spage][index]).forEach(function(key) {
+                                var obj = {};
+                                obj[key] = myData()[spage][index][key]
+                                args.push(obj)
+                            });
+                           setButtonAttributes( args ) 
+                        }
+                    });
+                }
+            })
+
+        });
+
+        $(".cta").bind("click", function(event, page, view) {
+            var activity = $(this).attr("data-activity"),
+            info = $(this).attr("data-info");
+            activityHandler(activity, info);
+            if ($(this).attr("data-activity_alt")) {
+                var activity_alt = $(this).attr("data-activity_alt"),
+                info_alt = $(this).attr("data-info_alt");
+                activityHandler(activity_alt, info_alt);
+            }
+        });
+
+        moxieHostSetVariable("javascript", 'testing 1 2 3');
+
+        hideAllButtons();
+        $("#buttons-container").css({ display: "flex" });
+
+    }
+
+    function playVideo (vid) {
+    	$('.loading').removeClass('hideMe');
+    	$('#media-player').removeClass('hideMe');
+    	loadVideo(vid);
+    }
+
+    function removeVideo() {
+        $('.loading').addClass('hideMe');
+        $('#media-player').addClass('hideMe');
+        killVideo();
+    }
+
+    function setButtonAttributes(args) {
+        $(args[0])
+            .removeClass('hideMe')
+            .attr("data-activity", args[1]['activity'])
+            .attr("data-info", args[2]['info'])
+            .find('img').attr('src', args[3]['img'])
+        if (args[4] ) {
+            $(args[0])
+                .attr("data-activity_alt", args[4]['activity_alt'])
+        }
+        if (args[5] ) {
+            $(args[0])
+                .attr("data-info_alt", args[5]['info_alt'])
+        }
+    }
+
+    function hideAllButtons() {
+        $('#buttons-container .cta').addClass('hideMe')
+    }
+
+    // Load the HTML4 version if there's not CSS transform
+
+    yepnope({
+        test: Modernizr.csstransforms,
+        yep: ['lib/turn.js'],
+        nope: ['lib/turn.html4.min.js'],
+        both: ['css/basic.css'],
+        complete: loadApp
+    });
+    $(document).ready(function () {
+        $('.flipbook').show();
+    })
+    </script>
+</body>
+
+</html>
